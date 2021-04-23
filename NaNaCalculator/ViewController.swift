@@ -148,7 +148,7 @@ class ViewController: UIViewController {
         
         if previousNunber != 0 {
             
-            
+            nowAnswer()
         }
         calculationSymbol = "/"
         previousNunber = nowNumber
@@ -160,7 +160,7 @@ class ViewController: UIViewController {
         
         if previousNunber != 0 {
             
-            
+            nowAnswer()
         }
         calculationSymbol = "X"
         previousNunber = nowNumber
@@ -172,7 +172,7 @@ class ViewController: UIViewController {
         
         if previousNunber != 0 {
             
-            
+            nowAnswer()
         }
         calculationSymbol = "-"
         previousNunber = nowNumber
@@ -184,7 +184,7 @@ class ViewController: UIViewController {
         
         if previousNunber != 0 {
             
-            
+            nowAnswer()
         }
         calculationSymbol = "+"
         previousNunber = nowNumber
