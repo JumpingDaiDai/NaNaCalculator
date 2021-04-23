@@ -13,9 +13,17 @@ class ViewController: UIViewController {
     //紀錄運算符號 (calculationSymbol = ""、"+"、"-"、"x"、"/")
     var calculationSymbol : String = ""
     //紀錄目前數字
-    var nowNumber : Double = 0
+    var nowNumber : Double = 0{
+        didSet {
+            print("nowNumber: \(nowNumber)")
+        }
+    }
     //紀錄上一個數字
-    var previousNunber : Double = 0
+    var previousNunber : Double = 0 {
+        didSet {
+            print("previousNunber: \(previousNunber)")
+        }
+    }
     //紀錄是否計算中
     var isCalculation : Bool = false
     //紀錄是否為新運算
@@ -106,32 +114,53 @@ class ViewController: UIViewController {
  
     
     @IBAction func numberButton(_ sender: UIButton) {
-        
-        let inputNumber = sender.tag
-        
-            
-        if let number = calculationView.text {
-                
-            if isNew == true {
-                    
-                calculationView.text = "\(inputNumber)"
-                isNew = false
-            } else {
-                    
-                // calculationSymbol 不管等於什麼都會 進到 if 區塊
-                if calculationView.text == "0" || calculationSymbol != "" {
-                        
-                    calculationView.text = "\(inputNumber)"
-                    calculationSymbol = ""
-                } else {
-                        
-                    calculationView.text = number + "\(inputNumber)"
-                }
-            }
-            
-           nowNumber = Double(number) ?? 0
-        }
+        numberButtonByDai(sender)
+//        let inputNumber = sender.tag
+//
+//
+//        if let number = calculationView.text {
+//
+//            if isNew == true {
+//
+//                calculationView.text = "\(inputNumber)"
+//                isNew = false
+//            } else {
+//
+//                // calculationSymbol 不管等於什麼都會 進到 if 區塊
+//                if calculationView.text == "0" || calculationSymbol != "" {
+//
+//                    calculationView.text = "\(inputNumber)"
+//                    calculationSymbol = ""
+//                } else {
+//
+//                    calculationView.text = number + "\(inputNumber)"
+//                }
+//            }
+//
+//           nowNumber = Double(number) ?? 0
+//        }
 
+    }
+    
+    func numberButtonByDai(_ sender: UIButton) {
+        let inputNumber = sender.tag
+        var displayText = calculationView.text ?? ""
+        
+        if isNew { // 新的運算時
+            // 直接將輸入的數字，設定給顯示的字串
+            displayText = "\(inputNumber)"
+            isNew = false
+        } else { // 不是新的運算   (底下程式碼還沒搞懂邏輯，所以就照著你的寫，不下註解了)
+            if displayText == "0" || calculationSymbol != "" {
+                displayText = "\(inputNumber)"
+                calculationSymbol = ""
+            } else {
+                displayText = displayText + "\(inputNumber)"
+            }
+        }
+        
+        calculationView.text = displayText
+        nowNumber = Double(displayText) ?? 0
     }
     
     @IBAction func number00Button(_ sender: UIButton) {
@@ -193,6 +222,8 @@ class ViewController: UIViewController {
         operation = OperationType.plus
     }
     @IBAction func equalButton(_ sender: UIButton) {
+        
+        print("a=\(previousNunber) b=\(nowNumber) operation=\(operation)")
         
         if isCalculation == true {
             
