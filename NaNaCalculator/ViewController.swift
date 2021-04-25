@@ -8,6 +8,10 @@
 
 import UIKit
 
+// TODO: Int 能裝的位數不足，會在轉型時閃退
+// 可以用這取代轉整數的處理 => String(format: "%.0f", nowNumber)
+
+
 class ViewController: UIViewController {
     
     //紀錄運算符號 (calculationSymbol = ""、"+"、"-"、"x"、"/")
@@ -15,6 +19,14 @@ class ViewController: UIViewController {
     //紀錄目前數字
     var nowNumber : Double = 0{
         didSet {
+            
+            // TODO: 不確定可不可以這樣寫
+            let floorNumber = Double(Int(nowNumber))
+            if nowNumber == floorNumber {
+                calculationView.text = "\(Int(nowNumber))"
+            } else {
+                calculationView.text = "\(nowNumber)"
+            }
             print("nowNumber: \(nowNumber)")
         }
     }
@@ -159,12 +171,13 @@ class ViewController: UIViewController {
             }
         }
         
-        calculationView.text = displayText
+//        calculationView.text = displayText
         nowNumber = Double(displayText) ?? 0
     }
     
     @IBAction func number00Button(_ sender: UIButton) {
         
+        // TODO: 這裡有bug
         guard let number = calculationView.text else {return}
         calculationView.text = number + "00"
         guard let stringToDouble = Double(number) else {return}
@@ -261,6 +274,7 @@ class ViewController: UIViewController {
             okText = "\(number)"
         }
         
+        // TODO: 這裡有bug
         if okText.count >= 7 {
             
             okText = String(okText.prefix(7))
