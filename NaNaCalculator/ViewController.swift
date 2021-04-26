@@ -12,6 +12,8 @@ import UIKit
 // 可以用這取代轉整數的處理 => String(format: "%.0f", nowNumber)
 
 
+
+
 class ViewController: UIViewController {
     
     //紀錄運算符號 (calculationSymbol = ""、"+"、"-"、"x"、"/")
@@ -20,10 +22,10 @@ class ViewController: UIViewController {
     var nowNumber : Double = 0{
         didSet {
             
-            // TODO: 不確定可不可以這樣寫
-            let floorNumber = Double(Int(nowNumber))
+            
+            let floorNumber = Double(String(format: "%.0f", nowNumber))
             if nowNumber == floorNumber {
-                calculationView.text = "\(Int(nowNumber))"
+                calculationView.text = "\(String(format: "%.0f", nowNumber))"
             } else {
                 calculationView.text = "\(nowNumber)"
             }
@@ -177,13 +179,25 @@ class ViewController: UIViewController {
     
     @IBAction func number00Button(_ sender: UIButton) {
         
-        // TODO: 這裡有bug
-        guard let number = calculationView.text else {return}
-        calculationView.text = number + "00"
-        guard let stringToDouble = Double(number) else {return}
-        nowNumber = stringToDouble
-        isCalculation = true
-        isNew = false
+        var displayText = calculationView.text ?? ""
+        
+        if isNew { // 新的運算時
+            // 直接將輸入的數字，設定給顯示的字串
+            displayText = ""
+            isNew = false
+        } else { // 不是新的運算   (底下程式碼還沒搞懂邏輯，所以就照著你的寫，不下註解了)
+            if displayText == "0" || calculationSymbol != "" {
+                displayText = ""
+                calculationSymbol = ""
+            } else {
+                displayText = displayText + "00"
+            }
+        }
+        
+//        calculationView.text = displayText
+        nowNumber = Double(displayText) ?? 0
+        
+        
     }
     
     @IBAction func divisionButton(_ sender: UIButton) {
@@ -243,8 +257,16 @@ class ViewController: UIViewController {
             switch operation {
                 
             case .division:
-                nowNumber = previousNunber / nowNumber
-                okAnswerString(from: nowNumber)
+                
+                if nowNumber != 0 {
+                    
+                    nowNumber = previousNunber / nowNumber
+                    okAnswerString(from: nowNumber)
+
+                } else {
+                    
+                    calculationView.text = "不可除以0"
+                }
             case .multiply:
                 nowNumber = previousNunber * nowNumber
                 okAnswerString(from: nowNumber)
@@ -268,7 +290,7 @@ class ViewController: UIViewController {
         var okText: String
         if floor(number) == number {
             
-            okText = "\(Int(number))"
+            okText = "\(String(format: "%.0f", number))"
         }else {
             
             okText = "\(number)"
@@ -279,6 +301,7 @@ class ViewController: UIViewController {
             
             okText = String(okText.prefix(7))
         }
+    
         calculationView.text = okText
     }
     
@@ -287,7 +310,13 @@ class ViewController: UIViewController {
         switch operation {
             
         case .division:
-            nowNumber = previousNunber / nowNumber
+            if nowNumber != 0 {
+                
+                nowNumber = previousNunber / nowNumber
+            } else {
+                
+                calculationView.text = "不可除以0"
+            }
             okAnswerString(from: nowNumber)
         case .multiply:
             nowNumber = previousNunber * nowNumber
