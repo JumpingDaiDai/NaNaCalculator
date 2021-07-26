@@ -26,8 +26,8 @@
             filePath = "NaNaCalculator/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "520"
-            endingLineNumber = "520"
+            startingLineNumber = "515"
+            endingLineNumber = "515"
             landmarkName = "zeroFloatHandle(number:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,9 +42,9 @@
             filePath = "NaNaCalculator/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "490"
-            endingLineNumber = "490"
-            landmarkName = "displayHandle(number:)"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
+            landmarkName = "calculate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,8 +58,8 @@
             filePath = "NaNaCalculator/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "522"
-            endingLineNumber = "522"
+            startingLineNumber = "517"
+            endingLineNumber = "517"
             landmarkName = "zeroFloatHandle(number:)"
             landmarkType = "7">
          </BreakpointContent>

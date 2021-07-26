@@ -29,7 +29,7 @@ class ViewController: UIViewController {
             print("nowNumber: \(nowNumber)")
             
             guard let nowNumber = nowNumber else { return }
-            displayHandle(number: nowNumber)
+//            displayHandle(number: nowNumber)
         }
     }
     //紀錄上一個數字
@@ -276,16 +276,11 @@ class ViewController: UIViewController {
     
     
     func numberButtonByDai(_ sender: UIButton) {
-        
-        // 若超過13位則不允許輸入
-        
-        let numberString = (nowNumber != nil) ? "\(nowNumber!)" : ""
-        print("numberString = \(numberString)")
-        if numberString.count > 13 { return }
-        
-        
+       
         let inputNumber = sender.tag
         var displayText = calculationView.text ?? ""
+        // 若超過13位則不允許輸入
+        if displayText.count > 13 { return }
         
         if isNew { // 新的運算時
             // 直接將輸入的數字，設定給顯示的字串
@@ -300,7 +295,7 @@ class ViewController: UIViewController {
             }
         }
         
-//        calculationView.text = displayText
+        calculationView.text = displayText
         print("displayText = \(displayText)")
         nowNumber = Double(displayText) ?? 0
     }
