@@ -17,29 +17,33 @@ import UIKit
 class ViewController: UIViewController {
     
     //紀錄運算符號 (calculationSymbol = ""、"+"、"-"、"x"、"/")
-    var calculationSymbol : String = ""
-    //紀錄目前數字
-    var nowNumber : Double = 0{
+    var calculationSymbol : String = "" {
         didSet {
-            
-            
-            let floorNumber = Double(String(format: "%.0f", nowNumber))
-            if nowNumber == floorNumber {
-                calculationView.text = "\(String(format: "%.0f", nowNumber))"
-            } else {
-                calculationView.text = "\(nowNumber)"
-            }
+            print("calculationSymbol = \(calculationSymbol)")
+        }
+    }
+    //紀錄目前數字
+    var nowNumber : Double? {
+        
+        didSet {
             print("nowNumber: \(nowNumber)")
+            
+            guard let nowNumber = nowNumber else { return }
+            displayHandle(number: nowNumber)
         }
     }
     //紀錄上一個數字
-    var previousNunber : Double = 0 {
+    var previousNunber : Double? {
         didSet {
             print("previousNunber: \(previousNunber)")
         }
     }
     //紀錄是否計算中
-    var isCalculation : Bool = false
+    var isCalculation : Bool = false {
+        didSet {
+//            print("isCalculation = \(isCalculation)")
+        }
+    }
     //紀錄是否為新運算
     var isNew : Bool = true
     
@@ -58,15 +62,22 @@ class ViewController: UIViewController {
     var operation : OperationType = .none
     
     @IBOutlet weak var calculationView: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    }
+    
     @IBAction func clearButton(_ sender: UIButton) {
         
         calculationView.text = "0"
         calculationSymbol = ""
-        nowNumber = 0
-        previousNunber = 0
+        nowNumber = nil
+        previousNunber = nil
         isCalculation = false
         isNew = true
     }
+    
     @IBAction func percentButton(_ sender: UIButton) {
         
         
@@ -85,7 +96,7 @@ class ViewController: UIViewController {
             let stringToDouble = Double(number) {
             
             nowNumber = stringToDouble / 100
-            okAnswerString(from: nowNumber)
+//            okAnswerString(from: nowNumber)
             isCalculation = true
             isNew = false
         }
@@ -93,42 +104,37 @@ class ViewController: UIViewController {
     
     @IBAction func deleteButton(_ sender: UIButton) {
         
+        guard let number = calculationView.text else { return }
         
-        guard let deleteNumber = calculationView.text else {return}
-        
-        if deleteNumber.count == 1 {
-                
+        if number.count == 1 {
+            
             calculationView.text = "0"
-            } else {
-                
-            guard let stringToDouble = Double(deleteNumber.dropLast()) else {return}
+        } else {
+            
+            guard let stringToDouble = Double(number.dropLast()) else { return }
             nowNumber = stringToDouble
-            okAnswerString(from: nowNumber)
-            }
+//            okAnswerString(from: nowNumber)
+        }
+        
         isCalculation = true
         isNew = false
-        
     }
+    
     @IBAction func pointButton(_ sender: UIButton) {
         
         // calculationView 中沒有 "." => 就能輸入 "."
         // calculationView 中有 "." => 不處理
-        if let number = calculationView.text {
+        guard let number = calculationView.text else { return }
+        guard !number.contains(".") else { return }
         
-            if number.contains(".") {
-                
-                return
-            } else {
-                
-                calculationView.text = number + "."
-            }
-        }
+        calculationView.text = number + "."
     }
-    
  
     
     @IBAction func numberButton(_ sender: UIButton) {
         numberButtonByDai(sender)
+        
+        
 //        let inputNumber = sender.tag
 //
 //
@@ -156,8 +162,56 @@ class ViewController: UIViewController {
 
     }
     
-    func numberButtonByDai(_ sender: UIButton) {
-        let inputNumber = sender.tag
+    /* 可以這樣子做整理
+    // Button 的類別
+    enum ButtonCategory {
+        // 1 ~ 9
+        case Number(Int)
+        // +: 11, -: 12, x: 13, /: 14
+        case Operator(Int)
+        // clean: 21, delete: 22, %: 23, =: 24
+        case Function(Int)
+        // none define
+        case None
+        
+        static func setTag(index: Int) -> ButtonCategory {
+            
+            if index >= 1 && index <= 9 {
+                return .Number(index)
+            } else if index >= 11 && index <= 14 {
+                return .Operator(index)
+            } else if index >= 21 && index <= 24 {
+                return .Function(index)
+            } else {
+                return .None
+            }
+        }
+    }
+    
+    
+    // 所有按鈕的clicked事件
+    @IBAction func allButtonClicked(_ sender: UIButton) {
+        
+        let buttonCategory = ButtonCategory.setTag(index: sender.tag)
+        
+        switch buttonCategory {
+        case .Number(let number):
+            numberHandle(number: number)
+            
+        case .Operator(let index):
+            operatorHandle(index: index)
+            
+        case .Function(let index):
+            functionHanle(index: index)
+            
+        case .None:
+            return
+        }
+    }
+    
+    // 處理數字
+    func numberHandle(number: Int) {
+        let inputNumber = number
         var displayText = calculationView.text ?? ""
         
         if isNew { // 新的運算時
@@ -172,27 +226,99 @@ class ViewController: UIViewController {
                 displayText = displayText + "\(inputNumber)"
             }
         }
-        
-//        calculationView.text = displayText
         nowNumber = Double(displayText) ?? 0
     }
     
-    @IBAction func number00Button(_ sender: UIButton) {
+    // 處理運算子
+    func operatorHandle(index: Int) {
         
+        guard index == 11, index == 12, index == 13, index == 14 else { return }
+        
+        if previousNunber != 0 {
+            
+            nowAnswer()
+        }
+        isCalculation = true
+        isNew = false
+        
+        switch index {
+        case 11:
+            calculationSymbol = "+"
+            operation = .plus
+        case 12:
+            calculationSymbol = "-"
+            operation = .minus
+        case 13:
+            calculationSymbol = "x"
+            operation = .multiply
+        case 14:
+            calculationSymbol = "/"
+            operation = .division
+        default:
+            break;
+        }
+    }
+    
+    // 處理功能鍵
+    func functionHanle(index: Int) {
+        switch index {
+        case 21:
+            // 呼叫 clean function
+            break
+        case 22:
+            // 呼叫 deleate function
+            break
+        default:
+            break;
+        }
+    }
+     */
+    
+    
+    func numberButtonByDai(_ sender: UIButton) {
+        
+        // 若超過13位則不允許輸入
+        
+        let numberString = (nowNumber != nil) ? "\(nowNumber!)" : ""
+        print("numberString = \(numberString)")
+        if numberString.count > 13 { return }
+        
+        
+        let inputNumber = sender.tag
         var displayText = calculationView.text ?? ""
         
         if isNew { // 新的運算時
             // 直接將輸入的數字，設定給顯示的字串
-            displayText = ""
+            displayText = "\(inputNumber)"
             isNew = false
         } else { // 不是新的運算   (底下程式碼還沒搞懂邏輯，所以就照著你的寫，不下註解了)
-            if displayText == "0" || calculationSymbol != "" {
+            if calculationSymbol != "" {
+                displayText = "\(inputNumber)"
+                calculationSymbol = ""
+            } else {
+                displayText = displayText + "\(inputNumber)"
+            }
+        }
+        
+//        calculationView.text = displayText
+        print("displayText = \(displayText)")
+        nowNumber = Double(displayText) ?? 0
+    }
+    
+    // MARK: (00)
+    @IBAction func number00Button(_ sender: UIButton) {
+        
+        var displayText = calculationView.text ?? ""
+        
+        if !isNew {
+            if calculationSymbol != "" {
                 displayText = ""
                 calculationSymbol = ""
             } else {
                 displayText = displayText + "00"
             }
         }
+//        }
         
 //        calculationView.text = displayText
         nowNumber = Double(displayText) ?? 0
@@ -200,145 +326,201 @@ class ViewController: UIViewController {
         
     }
     
+    // MARK: (/)
     @IBAction func divisionButton(_ sender: UIButton) {
         
-        if previousNunber != 0 {
-            
-            nowAnswer()
+        if nowNumber != nil {
+            calculate()
+            calculationSymbol = "/"
+            previousNunber = nowNumber
+            isCalculation = true
+            isNew = false
+            operation = OperationType.division
         }
-        calculationSymbol = "/"
-        previousNunber = nowNumber
-        isCalculation = true
-        isNew = false
-        operation = OperationType.division
+        
     }
+    
+    // MARK: (x)
     @IBAction func multiplyButton(_ sender: UIButton) {
         
-        if previousNunber != 0 {
-            
-            nowAnswer()
+        if nowNumber != nil {
+            calculate()
+            calculationSymbol = "X"
+            previousNunber = nowNumber
+            isCalculation = true
+            isNew = false
+            operation = OperationType.multiply
         }
-        calculationSymbol = "X"
-        previousNunber = nowNumber
-        isCalculation = true
-        isNew = false
-        operation = OperationType.multiply
+        
     }
+    
+    // MARK: (-)
     @IBAction func minusButton(_ sender: UIButton) {
         
-        if previousNunber != 0 {
-            
-            nowAnswer()
+        if nowNumber != nil {
+            calculate()
+            calculationSymbol = "-"
+            previousNunber = nowNumber
+            isCalculation = true
+            isNew = false
+            operation = OperationType.minus
         }
-        calculationSymbol = "-"
-        previousNunber = nowNumber
-        isCalculation = true
-        isNew = false
-        operation = OperationType.minus
     }
+    
+    // MARK: (+)
     @IBAction func plusButton(_ sender: UIButton) {
         
-        if previousNunber != 0 {
-            
-            nowAnswer()
+        if nowNumber != nil {
+            calculate()
+            calculationSymbol = "+"
+            previousNunber = nowNumber
+            isCalculation = true
+            isNew = false
+            operation = OperationType.plus
         }
-        calculationSymbol = "+"
-        previousNunber = nowNumber
-        isCalculation = true
-        isNew = false
-        operation = OperationType.plus
     }
+    
+    // MARK: (=)
     @IBAction func equalButton(_ sender: UIButton) {
         
         print("a=\(previousNunber) b=\(nowNumber) operation=\(operation)")
         
         if isCalculation == true {
             
-            switch operation {
-                
-            case .division:
-                
-                if nowNumber != 0 {
-                    
-                    nowNumber = previousNunber / nowNumber
-                    okAnswerString(from: nowNumber)
-
-                } else {
-                    
-                    calculationView.text = "不可除以0"
-                }
-            case .multiply:
-                nowNumber = previousNunber * nowNumber
-                okAnswerString(from: nowNumber)
-            case .minus:
-                nowNumber = previousNunber - nowNumber
-                okAnswerString(from: nowNumber)
-            case .plus:
-                nowNumber = previousNunber + nowNumber
-                okAnswerString(from: nowNumber)
-            case .none:
-                calculationView.text = ""
-            }
+            // 計算
+            calculate()
+            
             isCalculation = false
             isNew = true
         }
-        previousNunber = 0
+        previousNunber = nil
     }
     
-    func okAnswerString(from number: Double) {
-        
-        var okText: String
-        if floor(number) == number {
-            
-            okText = "\(String(format: "%.0f", number))"
-        }else {
-            
-            okText = "\(number)"
-        }
-        
-        // TODO: 這裡有bug
-        if okText.count >= 7 {
-            
-            okText = String(okText.prefix(7))
-        }
     
-        calculationView.text = okText
-    }
+    // 已移到 nowNumber didSet 中做處理
+//    func okAnswerString(from number: Double) {
+//
+//        var okText: String
+//        if floor(number) == number {
+//
+//            okText = "\(String(format: "%.0f", number))"
+//        }else {
+//
+//            okText = "\(number)"
+//        }
+//
+//        // TODO: 這裡有bug
+//        if okText.count >= 7 {
+//
+//            okText = String(okText.prefix(7))
+//        }
+//
+//        calculationView.text = okText
+//    }
     
-    func nowAnswer() {
+//    func nowAnswer() {
         
+//        switch operation {
+//
+//        case .division:
+//            if nowNumber != 0 {
+//
+//                nowNumber = previousNunber / nowNumber
+//            } else {
+//
+//                calculationView.text = "不可除以0"
+//            }
+//            okAnswerString(from: nowNumber)
+//        case .multiply:
+//            nowNumber = previousNunber * nowNumber
+//            okAnswerString(from: nowNumber)
+//        case .minus:
+//            nowNumber = previousNunber - nowNumber
+//            okAnswerString(from: nowNumber)
+//        case .plus:
+//            nowNumber = previousNunber + nowNumber
+//            okAnswerString(from: nowNumber)
+//        case .none:
+//            calculationView.text = ""
+//
+//        }
+//    }
+    
+    
+    // 計算
+    func calculate() {
+        
+        print("\n計算:")
+        print("previousNunber: \(previousNunber)")
+        print("nowNumber: \(nowNumber)")
+        print("operation: \(operation)\n")
+    
+        guard let previousNunber = previousNunber else { return }
+        guard let number = nowNumber else { return }
         switch operation {
-            
+           
         case .division:
+            
             if nowNumber != 0 {
                 
-                nowNumber = previousNunber / nowNumber
+                nowNumber = previousNunber / number
             } else {
-                
                 calculationView.text = "不可除以0"
             }
-            okAnswerString(from: nowNumber)
+            
         case .multiply:
-            nowNumber = previousNunber * nowNumber
-            okAnswerString(from: nowNumber)
+            nowNumber = previousNunber * number
+            
         case .minus:
-            nowNumber = previousNunber - nowNumber
-            okAnswerString(from: nowNumber)
+            nowNumber = previousNunber - number
+            
         case .plus:
-            nowNumber = previousNunber + nowNumber
-            okAnswerString(from: nowNumber)
+            nowNumber = previousNunber + number
+            
         case .none:
             calculationView.text = ""
-            
+        }
+        print("calculate nowNumber = \(nowNumber)")
+    }
+    
+    // 顯示 Number 的處理
+    func displayHandle(number: Double) {
+        
+        
+        let num = zeroFloatHandle(number: number)
+//        let finalNum = tooLongHandle(number: num)
+        print("num = \(num)")
+        calculationView.text = num
+    }
+    
+    //位數過多時轉換為科學記號
+    func tooLongHandle(number: Double) -> String {
+        
+        // 整數 > 5, 小數 > 5 =>
+        // 整數 > 5, 小數 < 5 =>
+        // 整數 < 5, 小數 > 5 =>
+        // 整數 < 5, 小數 < 5 =>
+        
+        let smallDecimal = NSDecimalNumber(value: number)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.maximumFractionDigits = 20
+        guard let number = numberFormatter.string(from: smallDecimal) else { return String() }
+        return number
+    }
+    
+    //刪除整數時小數點後的顯示
+    func zeroFloatHandle(number: Double) -> String {
+        
+        // 若數字為整數時，不顯示小數點
+        // 四捨五入到整數位
+        let floorNumber = Double(String(format: "%.0f", number)) ?? 0
+        print("floorNumber = \(floorNumber)")
+        // 判斷 "四捨五入後的數字" 與 "原本數字" 是否相同
+        if number == floorNumber {
+            return String(format: "%.0f", number)
+        } else {
+            return "\(number)"
         }
     }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-
-
 }
 

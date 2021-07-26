@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B252FE7926A85F8800999C61 /* BugList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252FE7826A85F8800999C61 /* BugList.swift */; };
 		B2A5610C262D673E00FDC71D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A5610B262D673E00FDC71D /* AppDelegate.swift */; };
 		B2A5610E262D673E00FDC71D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A5610D262D673E00FDC71D /* SceneDelegate.swift */; };
 		B2A56110262D673E00FDC71D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A5610F262D673E00FDC71D /* ViewController.swift */; };
@@ -14,9 +15,12 @@
 		B2A56115262D674000FDC71D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2A56114262D674000FDC71D /* Assets.xcassets */; };
 		B2A56118262D674000FDC71D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2A56116262D674000FDC71D /* LaunchScreen.storyboard */; };
 		B2A56120262DDC8000FDC71D /* StackViewSample.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A5611F262DDC8000FDC71D /* StackViewSample.xib */; };
+		B2C2DE762636E8960065F890 /* CalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C2DE752636E8960065F890 /* CalculatorViewController.swift */; };
+		B2C2DE792636EB360065F890 /* CalculateBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C2DE782636EB360065F890 /* CalculateBrain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B252FE7826A85F8800999C61 /* BugList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BugList.swift; sourceTree = "<group>"; };
 		B2A56108262D673E00FDC71D /* NaNaCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NaNaCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2A5610B262D673E00FDC71D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2A5610D262D673E00FDC71D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +30,8 @@
 		B2A56117262D674000FDC71D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B2A56119262D674000FDC71D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B2A5611F262DDC8000FDC71D /* StackViewSample.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StackViewSample.xib; sourceTree = "<group>"; };
+		B2C2DE752636E8960065F890 /* CalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorViewController.swift; sourceTree = "<group>"; };
+		B2C2DE782636EB360065F890 /* CalculateBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateBrain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +67,9 @@
 				B2A5610B262D673E00FDC71D /* AppDelegate.swift */,
 				B2A5610D262D673E00FDC71D /* SceneDelegate.swift */,
 				B2A5610F262D673E00FDC71D /* ViewController.swift */,
+				B2C2DE752636E8960065F890 /* CalculatorViewController.swift */,
+				B2C2DE782636EB360065F890 /* CalculateBrain.swift */,
+				B252FE7826A85F8800999C61 /* BugList.swift */,
 				B2A56111262D673E00FDC71D /* Main.storyboard */,
 				B2A5611F262DDC8000FDC71D /* StackViewSample.xib */,
 				B2A56114262D674000FDC71D /* Assets.xcassets */,
@@ -144,7 +153,10 @@
 			files = (
 				B2A56110262D673E00FDC71D /* ViewController.swift in Sources */,
 				B2A5610C262D673E00FDC71D /* AppDelegate.swift in Sources */,
+				B2C2DE762636E8960065F890 /* CalculatorViewController.swift in Sources */,
 				B2A5610E262D673E00FDC71D /* SceneDelegate.swift in Sources */,
+				B252FE7926A85F8800999C61 /* BugList.swift in Sources */,
+				B2C2DE792636EB360065F890 /* CalculateBrain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
