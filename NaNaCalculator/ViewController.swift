@@ -30,6 +30,7 @@ class ViewController: UIViewController {
             
             guard let nowNumber = nowNumber else { return }
 //            displayHandle(number: nowNumber)
+            
         }
     }
     //紀錄上一個數字
@@ -279,8 +280,6 @@ class ViewController: UIViewController {
        
         let inputNumber = sender.tag
         var displayText = calculationView.text ?? ""
-        // 若超過13位則不允許輸入
-        if displayText.count > 13 { return }
         
         if isNew { // 新的運算時
             // 直接將輸入的數字，設定給顯示的字串
@@ -294,7 +293,8 @@ class ViewController: UIViewController {
                 displayText = displayText + "\(inputNumber)"
             }
         }
-        
+        // 若超過13位則不允許輸入
+        if displayText.count > 13 { return }
         calculationView.text = displayText
         print("displayText = \(displayText)")
         nowNumber = Double(displayText) ?? 0
@@ -450,7 +450,7 @@ class ViewController: UIViewController {
         print("nowNumber: \(nowNumber)")
         print("operation: \(operation)\n")
         
-        var inCalclation : Double = 0
+        var inCalculation : Double = 0
         guard let previousNunber = previousNunber else { return }
         guard let number = nowNumber else { return }
         switch operation {
@@ -459,27 +459,27 @@ class ViewController: UIViewController {
             
             if nowNumber != 0 {
                 
-                inCalclation = previousNunber / number
-                calculationView.text = String(format:"%g", inCalclation)
-                nowNumber = inCalclation
+                inCalculation = previousNunber / number
+                displayHandle(number: inCalculation)
+                nowNumber = inCalculation
             } else {
                 calculationView.text = "不可除以0"
             }
             
         case .multiply:
-            inCalclation = previousNunber * number
-            calculationView.text = String(format:"%g", inCalclation)
-            nowNumber = inCalclation
+            inCalculation = previousNunber * number
+            displayHandle(number: inCalculation)
+            nowNumber = inCalculation
             
         case .minus:
-            inCalclation = previousNunber - number
-            calculationView.text = String(format:"%g", inCalclation)
-            nowNumber = inCalclation
+            inCalculation = previousNunber - number
+            displayHandle(number: inCalculation)
+            nowNumber = inCalculation
             
         case .plus:
-            inCalclation = previousNunber + number
-            calculationView.text = String(format:"%g", inCalclation)
-            nowNumber = inCalclation
+            inCalculation = previousNunber + number
+            displayHandle(number: inCalculation)
+            nowNumber = inCalculation
             
         case .none:
             calculationView.text = ""
@@ -491,29 +491,31 @@ class ViewController: UIViewController {
     // 顯示 Number 的處理
     func displayHandle(number: Double) {
         
+        var numberStr = String(format:"%g", number)
+        //超過13位以科學記號顯示
+        if numberStr.count > 13 {
+            numberStr = transformScientificNotation(number: number)
+            
+        }
+        calculationView.text = numberStr
         
-        let num = zeroFloatHandle(number: number)
-//        let finalNum = tooLongHandle(number: num)
-        print("num = \(num)")
-        calculationView.text = num
     }
     
     //位數過多時轉換為科學記號
-    func tooLongHandle(number: Double) -> String {
+    func transformScientificNotation(number: Double) -> String {
         
-        // 整數 > 5, 小數 > 5 =>
-        // 整數 > 5, 小數 < 5 =>
-        // 整數 < 5, 小數 > 5 =>
-        // 整數 < 5, 小數 < 5 =>
-        
-        let smallDecimal = NSDecimalNumber(value: number)
-        let numberFormatter = NumberFormatter()
-        numberFormatter.maximumFractionDigits = 20
-        guard let number = numberFormatter.string(from: smallDecimal) else { return String() }
-        return number
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .scientific
+        formatter.positiveFormat = "0.###E+0"
+        formatter.exponentSymbol = "e"
+        if let scientificFormatted = formatter.string(for: number) {
+            return scientificFormatted
+        } else { return "" }
     }
     
     //刪除整數時小數點後的顯示
+    //此function可用"%g"取代
+    /*
     func zeroFloatHandle(number: Double) -> String {
         
         // 若數字為整數時，不顯示小數點
@@ -527,5 +529,6 @@ class ViewController: UIViewController {
             return "\(number)"
         }
     }
+     */
 }
 
