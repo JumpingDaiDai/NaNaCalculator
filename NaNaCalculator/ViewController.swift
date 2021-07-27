@@ -449,7 +449,8 @@ class ViewController: UIViewController {
         print("previousNunber: \(previousNunber)")
         print("nowNumber: \(nowNumber)")
         print("operation: \(operation)\n")
-    
+        
+        var inCalclation : Double = 0
         guard let previousNunber = previousNunber else { return }
         guard let number = nowNumber else { return }
         switch operation {
@@ -458,24 +459,33 @@ class ViewController: UIViewController {
             
             if nowNumber != 0 {
                 
-                nowNumber = previousNunber / number
+                inCalclation = previousNunber / number
+                calculationView.text = String(format:"%g", inCalclation)
+                nowNumber = inCalclation
             } else {
                 calculationView.text = "不可除以0"
             }
             
         case .multiply:
-            nowNumber = previousNunber * number
+            inCalclation = previousNunber * number
+            calculationView.text = String(format:"%g", inCalclation)
+            nowNumber = inCalclation
             
         case .minus:
-            nowNumber = previousNunber - number
+            inCalclation = previousNunber - number
+            calculationView.text = String(format:"%g", inCalclation)
+            nowNumber = inCalclation
             
         case .plus:
-            nowNumber = previousNunber + number
+            inCalclation = previousNunber + number
+            calculationView.text = String(format:"%g", inCalclation)
+            nowNumber = inCalclation
             
         case .none:
             calculationView.text = ""
         }
         print("calculate nowNumber = \(nowNumber)")
+        
     }
     
     // 顯示 Number 的處理
