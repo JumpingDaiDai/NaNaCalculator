@@ -16,6 +16,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    
     //紀錄運算符號 (calculationSymbol = ""、"+"、"-"、"x"、"/")
     var calculationSymbol : String = "" {
         didSet {
@@ -66,7 +67,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let number = scientificNotationToNumber(number: 1.12e+15)
+        print("number = \(number)")
     }
     
     @IBAction func clearButton(_ sender: UIButton) {
@@ -315,7 +317,7 @@ class ViewController: UIViewController {
         }
 //        }
         
-//        calculationView.text = displayText
+        calculationView.text = displayText
         nowNumber = Double(displayText) ?? 0
         
         
@@ -507,6 +509,7 @@ class ViewController: UIViewController {
         let formatter = NumberFormatter()
         formatter.numberStyle = .scientific
         formatter.positiveFormat = "0.###E+0"
+        formatter.positiveFormat = "0.###E-0"
         formatter.exponentSymbol = "e"
         if let scientificFormatted = formatter.string(for: number) {
             return scientificFormatted
@@ -530,5 +533,15 @@ class ViewController: UIViewController {
         }
     }
      */
+    
+    //將科學記號轉回數字
+    func scientificNotationToNumber(number: Double) -> String {
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = NumberFormatter.Style.decimal
+        let finalNumber = numberFormatter.number(from: "\(number)")
+        let numberStr = String("\(finalNumber)")
+        return numberStr
+    }
 }
 
