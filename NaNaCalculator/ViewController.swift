@@ -67,8 +67,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let number = scientificNotationToNumber(number: 1.12e+15)
-        print("number = \(number)")
     }
     
     @IBAction func clearButton(_ sender: UIButton) {
@@ -98,7 +96,9 @@ class ViewController: UIViewController {
         if let number = calculationView.text,
             let stringToDouble = Double(number) {
             
-            nowNumber = stringToDouble / 100
+            let percentNumber = stringToDouble / 100
+            calculationView.text = "\(percentNumber)"
+            nowNumber = Double(percentNumber)
 //            okAnswerString(from: nowNumber)
             isCalculation = true
             isNew = false
@@ -108,19 +108,27 @@ class ViewController: UIViewController {
     @IBAction func deleteButton(_ sender: UIButton) {
         
         guard let number = calculationView.text else { return }
+        print("\n原始text = \(number)")
         
         if number.count == 1 {
             
             calculationView.text = "0"
+            isCalculation = false
+            isNew = true
+            nowNumber = nil
+        }
+        else if number.contains("e") {
+            
+            calculationView.text = "0"
+            isCalculation = false
+            isNew = true
+            nowNumber = nil
         } else {
             
-            guard let stringToDouble = Double(number.dropLast()) else { return }
-            nowNumber = stringToDouble
-//            okAnswerString(from: nowNumber)
+            let deleteNumber = number.dropLast()
+            calculationView.text = "\(deleteNumber)"
+            nowNumber = Double(deleteNumber)
         }
-        
-        isCalculation = true
-        isNew = false
     }
     
     @IBAction func pointButton(_ sender: UIButton) {
@@ -131,6 +139,7 @@ class ViewController: UIViewController {
         guard !number.contains(".") else { return }
         
         calculationView.text = number + "."
+        isNew = false
     }
  
     
@@ -316,7 +325,7 @@ class ViewController: UIViewController {
             }
         }
 //        }
-        
+        if displayText.count > 13 { return }
         calculationView.text = displayText
         nowNumber = Double(displayText) ?? 0
         
@@ -542,6 +551,16 @@ class ViewController: UIViewController {
         let finalNumber = numberFormatter.number(from: "\(number)")
         let numberStr = String("\(finalNumber)")
         return numberStr
+        
     }
+    
+    func test(number: String) -> String {
+        
+        let theNumber = number
+        let decimalValue = NSDecimalNumber(string: theNumber)
+        return String("\(decimalValue)")
+        
+    }
+    
 }
 
